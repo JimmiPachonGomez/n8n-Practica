@@ -1,0 +1,236 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "sendTo": "jimmi.pachon2001@gmail.com",
+        "subject": "Productos Recomendados",
+        "emailType": "text",
+        "message": "={{ $json.mensaje }}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        -440,
+        -140
+      ],
+      "id": "fb78c19c-8731-4585-9a24-31e414cd9ae0",
+      "name": "Gmail",
+      "webhookId": "111752ea-6b1b-47d0-8221-12411bb53b5b",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "tJP60wBxKAiZQxwV",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1kJcTPaGKKvz60V3syWTJCNn6qoDoSx5tAKplhP2XVKc",
+          "mode": "list",
+          "cachedResultName": "d1_products",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kJcTPaGKKvz60V3syWTJCNn6qoDoSx5tAKplhP2XVKc/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kJcTPaGKKvz60V3syWTJCNn6qoDoSx5tAKplhP2XVKc/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        -1180,
+        -140
+      ],
+      "id": "2420f901-57ec-4b30-b61f-27afc142a2c6",
+      "name": "Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "8Leg4wguYUDkU8nf",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0a9dbfc1-3bc3-4560-9d2d-e2d573c4854a",
+              "name": "name",
+              "value": "={{ $json.name }}",
+              "type": "string"
+            },
+            {
+              "id": "0f21d714-cb82-4466-9e1f-3de2ef517e20",
+              "name": "price",
+              "value": "={{ $json.price }}",
+              "type": "number"
+            },
+            {
+              "id": "c959977a-8d0f-4396-a1cb-3460d601df6d",
+              "name": "link",
+              "value": "={{ $json.link }}",
+              "type": "string"
+            },
+            {
+              "id": "f5d58a1d-d130-4d73-b0ff-9d7410b1b145",
+              "name": "images",
+              "value": "={{ $json.images }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1040,
+        -140
+      ],
+      "id": "a032efaf-70b7-47df-b425-c0c044aa2249",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "type": "random"
+      },
+      "type": "n8n-nodes-base.sort",
+      "typeVersion": 1,
+      "position": [
+        -900,
+        -140
+      ],
+      "id": "07146deb-a925-4305-a5a7-ce9335e773de",
+      "name": "Sort"
+    },
+    {
+      "parameters": {
+        "maxItems": 5
+      },
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        -740,
+        -140
+      ],
+      "id": "42dfe0aa-ca9b-40a9-9854-89452e9c7d00",
+      "name": "Limit"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1340,
+        -140
+      ],
+      "id": "90e11170-d8ea-4dd7-9148-907e0bf555b0",
+      "name": "When clicking ‘Test workflow’"
+    },
+    {
+      "parameters": {
+        "jsCode": "let productos = items.map(item => {\n    return `🔹 ${item.json.name}  \n    🏷️ Precio: ${item.json.price}  \n    🔗 Link: ${item.json.link}`;\n}).join(\"\\n\\n\");\n\nreturn [{\n    json: {\n        mensaje: `📢 Lista de Productos Recomendados D1📢\\n\\n${productos}`\n    }\n}];\n\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -580,
+        -140
+      ],
+      "id": "f31bc5fb-0bdc-416c-b09c-0a84f9723ac5",
+      "name": "Code"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Sort",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sort": {
+      "main": [
+        [
+          {
+            "node": "Limit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limit": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "saveDataErrorExecution": "all",
+    "saveExecutionProgress": true,
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "versionId": "95456fd3-3623-4795-bd53-7e18f80f106c",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "cc7b0198f32fa6a419cdb734f035198205de914252029af0275254d5364621bc"
+  },
+  "id": "Yc2RPjaFaa5puaHF",
+  "tags": []
+}
