@@ -7,6 +7,10 @@ Partiendo de los datos obtenidos se comenzó a realizar el flujo de trabajo, pri
 
 ![Logo](workflow.png)
 
+Al ejecutarse el workflow se envía un email al correo, el cual se vé de la siguiente manera:
+
+![Logo](email_final.png)
+
 # Posibles mejoras
 
 1. Para el propósito de la práctica los productos recomendados son aleatorios, pero podría basarse en una base de datos que recopile los productos adquiridos por diferentes usuarios.
